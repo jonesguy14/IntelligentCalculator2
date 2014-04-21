@@ -1,0 +1,100 @@
+# depslib dependency file v1.0
+1398038171 source:c:\users\james\desktop\codeblocks\calculator2\binaryoperation.cpp
+	"binaryoperation.h"
+
+1398038171 c:\users\james\desktop\codeblocks\calculator2\binaryoperation.h
+	<iostream>
+	<vector>
+
+1398038190 source:c:\users\james\desktop\codeblocks\calculator2\expression-stack.cpp
+	<iostream>
+	<vector>
+	"binaryoperation.h"
+
+1398081410 source:c:\users\james\desktop\codeblocks\calculator2\main.cpp
+	<iostream>
+	<stdio.h>
+	<vector>
+	"shuntingyard.h"
+
+1398038773 c:\users\james\desktop\codeblocks\calculator2\shuntingyard.h
+	<iostream>
+	<cstring>
+	<string>
+	<vector>
+	<stdio.h>
+	"binaryoperation.h"
+	"shunting-stack.h"
+	"expression-stack.h"
+	"expression.h"
+	"logarithm.h"
+	"exponent.h"
+	"number.h"
+	"constant.h"
+
+1398038569 source:c:\users\james\desktop\codeblocks\calculator2\shunting-stack.cpp
+	<iostream>
+	<exception>
+	<vector>
+	"binaryoperation.h"
+
+1398041334 source:c:\users\james\desktop\codeblocks\calculator2\shuntingyard.cpp
+	"shuntingyard.h"
+
+1398076734 c:\users\james\desktop\codeblocks\calculator2\expression.h
+	<string>
+	<vector>
+	<sstream>
+	<iostream>
+
+1398076785 c:\users\james\desktop\codeblocks\calculator2\logarithm.h
+	"expression.h"
+
+1398076795 c:\users\james\desktop\codeblocks\calculator2\exponent.h
+	"expression.h"
+
+1398076629 c:\users\james\desktop\codeblocks\calculator2\number.h
+	"expression.h"
+	<cmath>
+	<sstream>
+
+1398076552 c:\users\james\desktop\codeblocks\calculator2\constant.h
+	"expression.h"
+	"number.h"
+
+1398041305 c:\users\james\desktop\codeblocks\calculator2\shunting-stack.h
+	<iostream>
+	<exception>
+	<vector>
+	"binaryoperation.h"
+
+1398040850 c:\users\james\desktop\codeblocks\calculator2\expression-stack.h
+	<iostream>
+	<vector>
+	"binaryoperation.h"
+
+1398047251 c:\users\james\desktop\codeblocks\calculator2\fraction.h
+	"expression.h"
+	"logarithm.h"
+	"exponent.h"
+	"number.h"
+	"constant.h"
+	"polynomial.h"
+
+1398046997 c:\users\james\desktop\codeblocks\calculator2\polynomial.h
+	"expression.h"
+	"fraction.h"
+	"logarithm.h"
+	"exponent.h"
+	"number.h"
+	"constant.h"
+
+1398081293 source:c:\users\james\desktop\codeblocks\calculator2\expression.cpp
+	"expression.h"
+
+1398081293 source:c:\users\james\desktop\codeblocks\calculator2\number.cpp
+	"number.h"
+
+1398079918 source:c:\users\james\desktop\codeblocks\calculator2\constant.cpp
+	"constant.h"
+
