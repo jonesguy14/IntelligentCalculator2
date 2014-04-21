@@ -1,0 +1,10 @@
+Issues:
+	Divide/exponentiate methods won't work until exponent and fraction are implemented
+	.negative() affects the object it's called upon, which leads to some funky results
+	Expression.simplify() doesn't work
+	
+	Logarithm/Exponent/Fraction aren't implemented
+		- Hopefully you can look at the code and see what needs to be done
+		
+	Recursive step is not yet implemented
+	Shunting yard evaluator not yet implemented
