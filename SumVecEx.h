@@ -23,7 +23,7 @@ public:
     string getName();
     double toDecimal();
 
-    void negative();
+    Expression* negative();
 
     vector<Expression*> simplifyVec();
     vector<Expression*> getExpression();
