@@ -1,32 +1,35 @@
+/*
+    Author: Achi Jones
+*/
 #include "MultVecEx.h"
 
 using namespace std;
 
-MultVecEx::MultVecEx() {}
+MultiplicationVector::MultiplicationVector() {}
 
-MultVecEx::MultVecEx(Expression* numerator, Expression* denominator) {
+MultiplicationVector::MultiplicationVector(Expression* numerator, Expression* denominator) {
     this->numerator.push_back(numerator);
     this->denominator.push_back(denominator);
 }
 
-MultVecEx::MultVecEx(vector<Expression*> numerator, vector<Expression*> denominator) {
+MultiplicationVector::MultiplicationVector(vector<Expression*> numerator, vector<Expression*> denominator) {
     this->numerator = numerator;
     this->denominator = denominator;
 }
 
-MultVecEx::MultVecEx(vector<Expression*> numerator) {
+MultiplicationVector::MultiplicationVector(vector<Expression*> numerator) {
     this->numerator = numerator;
 }
 
-Expression* MultVecEx::subtract(Expression* ex) {
+Expression* MultiplicationVector::subtract(Expression* ex) {
     return add(ex->negative());
 }
 
-Expression* MultVecEx::add(Expression* ex) {
+Expression* MultiplicationVector::add(Expression* ex) {
     if (numerator.size() == 1) {
         if (numerator[0]->getName() == "Multiplication Vector") {
-            //Expression* element = MultVecEx(numerator[0]);
-            MultVecEx* nummy = static_cast<MultVecEx*>(numerator[0]);
+            //Expression* element = MultiplicationVector(numerator[0]);
+            MultiplicationVector* nummy = static_cast<MultiplicationVector*>(numerator[0]);
             numerator = nummy->getNumerator();
         }
         else if (denominator.size() == 0) {
@@ -39,7 +42,7 @@ Expression* MultVecEx::add(Expression* ex) {
     }
 
     if (ex->getName() == "Multiplication Vector") {
-        MultVecEx* exmult = static_cast<MultVecEx*>(ex);
+        MultiplicationVector* exmult = static_cast<MultiplicationVector*>(ex);
         vector<Expression*> ex_num = exmult->getNumerator();
         vector<Expression*> ex_den = exmult->getDenominator();
 
@@ -53,12 +56,12 @@ Expression* MultVecEx::add(Expression* ex) {
                 den_int /= gcf_int;
                 Number* nnum = new Number(num_int);
                 Number* dnum = new Number(den_int);
-                MultVecEx* result = new MultVecEx(nnum, dnum);
+                MultiplicationVector* result = new MultiplicationVector(nnum, dnum);
                 return result;
                 }
             }
 
-        //see if other MultVecEx has same denominator
+        //see if other MultiplicationVector has same denominator
         double den_val = 0;
         for (int i = 0; i < denominator.size(); i++) {
             den_val *= denominator[i]->toDecimal();
@@ -102,7 +105,7 @@ Expression* MultVecEx::add(Expression* ex) {
                 vector<Expression*> summer;
                 summer.push_back(this);
                 summer.push_back(ex);
-                SumVecEx* result = new SumVecEx(summer);
+                SummationVector* result = new SummationVector(summer);
                 return result;
             }
             ex_num    = simplifyVec(ex_num);
@@ -115,11 +118,11 @@ Expression* MultVecEx::add(Expression* ex) {
                 Number* comb_int = new Number((int)round(int_test));
                 result_vec.push_back(comb_int);
             } else {
-                SumVecEx* sum_final = new SumVecEx(summer);
+                SummationVector* sum_final = new SummationVector(summer);
                 result_vec.push_back(sum_final);
             }
 
-            MultVecEx* final_mult = new MultVecEx(result_vec, denominator);
+            MultiplicationVector* final_mult = new MultiplicationVector(result_vec, denominator);
             return final_mult;
         }
     }
@@ -147,10 +150,10 @@ Expression* MultVecEx::add(Expression* ex) {
                     }
                 Number* int_one = new Number(1);
                 new_sum_ex.push_back(int_one);
-                SumVecEx* sumf = new SumVecEx(new_sum_ex);
+                SummationVector* sumf = new SummationVector(new_sum_ex);
                 new_mult_ex.push_back(sumf);
                 new_mult_ex.push_back(ex);
-                MultVecEx* mult_final = new MultVecEx(new_mult_ex);
+                MultiplicationVector* mult_final = new MultiplicationVector(new_mult_ex);
                 return mult_final;
                 }
             }
@@ -166,11 +169,11 @@ Expression* MultVecEx::add(Expression* ex) {
     vector<Expression*> sumv;
     sumv.push_back(this);
     sumv.push_back(ex);
-    SumVecEx* sum_fin = new SumVecEx(sumv);
+    SummationVector* sum_fin = new SummationVector(sumv);
     return sum_fin;
 }
 
-Expression* MultVecEx::multiply(Expression* ex) {
+Expression* MultiplicationVector::multiply(Expression* ex) {
     if (ex->getName() == "Adding Vector") {
         return ex->multiply(this);
     }
@@ -183,7 +186,7 @@ Expression* MultVecEx::multiply(Expression* ex) {
     }
 
     if (ex->getName() == "Multiply Vector") {
-        MultVecEx* exm = static_cast<MultVecEx*>(ex);
+        MultiplicationVector* exm = static_cast<MultiplicationVector*>(ex);
         vector<Expression*> ex_num = exm->getNumerator();
         vector<Expression*> ex_den = exm->getDenominator();
         for (int i = 0; i < numerator.size(); i++) {
@@ -194,7 +197,7 @@ Expression* MultVecEx::multiply(Expression* ex) {
         }
         ex_num = simplifyVec(ex_num);
         ex_den = simplifyVec(ex_den);
-        MultVecEx* mult_fin = new MultVecEx(ex_num, ex_den);
+        MultiplicationVector* mult_fin = new MultiplicationVector(ex_num, ex_den);
         return mult_fin;
     }
 
@@ -218,11 +221,11 @@ Expression* MultVecEx::multiply(Expression* ex) {
             }
         }
     }
-    MultVecEx* final_mult = new MultVecEx(multys, denominator);
+    MultiplicationVector* final_mult = new MultiplicationVector(multys, denominator);
     return final_mult;
 }
 
-Expression* MultVecEx::divide(Expression* ex) {
+Expression* MultiplicationVector::divide(Expression* ex) {
     vector<Expression*> multys = denominator;
     multys.push_back(ex->simplify());
     for (int i = 0; i < numerator.size(); i++) {
@@ -257,7 +260,7 @@ Expression* MultVecEx::divide(Expression* ex) {
         }
 
         if (e->getName() == "Multiply Vector") {
-            MultVecEx* em = static_cast<MultVecEx*>(e);
+            MultiplicationVector* em = static_cast<MultiplicationVector*>(e);
             vector<Expression*> onum = em->getNumerator();
             vector<Expression*> oden = em->getDenominator();
             if (onum.size() > 0 && oden.size() > 0) {
@@ -282,22 +285,22 @@ Expression* MultVecEx::divide(Expression* ex) {
         }
     }
 
-    MultVecEx* final_mult = new MultVecEx(numerator, multys);
+    MultiplicationVector* final_mult = new MultiplicationVector(numerator, multys);
     return final_mult;
 }
 
-vector<Expression*> MultVecEx::getNumerator() {
+vector<Expression*> MultiplicationVector::getNumerator() {
     return numerator;
 }
-vector<Expression*> MultVecEx::getDenominator() {
+vector<Expression*> MultiplicationVector::getDenominator() {
     return denominator;
 }
 
-string MultVecEx::getName() {
+string MultiplicationVector::getName() {
     return "Multiply Vector";
 }
 
-Expression* MultVecEx::simplify() {
+Expression* MultiplicationVector::simplify() {
     if (denominator.size() > 0) {
         for (int i = 0; i < denominator.size(); i++) {
             if (denominator[i]->toDecimal() == 0) {
@@ -313,7 +316,7 @@ Expression* MultVecEx::simplify() {
     denominator = simplifyVec(denominator);
     if (denominator.size() == 1) {
         if (denominator[0]->getName() == "Multiply Vector") {
-            MultVecEx* den_mul = static_cast<MultVecEx*>(denominator[0]);
+            MultiplicationVector* den_mul = static_cast<MultiplicationVector*>(denominator[0]);
             denominator = den_mul->getNumerator();
             vector<Expression*> rednum = den_mul->getNumerator();
             for (int i = 0; i < rednum.size(); i++) {
@@ -323,7 +326,7 @@ Expression* MultVecEx::simplify() {
     }
 
     if (numerator[0]->getName() == "Multiply Vector") {
-        MultVecEx* mu = static_cast<MultVecEx*>(numerator[0]);
+        MultiplicationVector* mu = static_cast<MultiplicationVector*>(numerator[0]);
         numerator = mu->getNumerator();
         vector<Expression*> temp_den = mu->getDenominator();
         for (int i = 0; i < temp_den.size(); i++) {
@@ -338,7 +341,7 @@ Expression* MultVecEx::simplify() {
                 numerator[0] = e;
                 denominator.erase(denominator.begin());
             } else {
-                MultVecEx* multmp = static_cast<MultVecEx*>(e);
+                MultiplicationVector* multmp = static_cast<MultiplicationVector*>(e);
                 vector<Expression*> tnum = multmp->getNumerator();
                 vector<Expression*> tden = multmp->getDenominator();
                 numerator = tnum;
@@ -359,7 +362,7 @@ Expression* MultVecEx::simplify() {
     return this;
 }
 
-vector<Expression*> MultVecEx::simplifyVec(vector<Expression*> exvec) {
+vector<Expression*> MultiplicationVector::simplifyVec(vector<Expression*> exvec) {
     for (int i = 0; i < exvec.size(); i++) {
         exvec[i] = exvec[i]->simplify();
     }
@@ -372,7 +375,7 @@ vector<Expression*> MultVecEx::simplifyVec(vector<Expression*> exvec) {
     return exvec;
 }
 
-int MultVecEx::GreatCommonFactor(int a, int b) {
+int MultiplicationVector::GreatCommonFactor(int a, int b) {
     int iabs = abs(a-b);
     for (int n = 2; n <= iabs; n++) {
         if (a%n == 0 && b%n == 0) {
@@ -382,7 +385,7 @@ int MultVecEx::GreatCommonFactor(int a, int b) {
     return 1;
 }
 
-double MultVecEx::toDecimal() {
+double MultiplicationVector::toDecimal() {
     double result = 1;
     for (int i = 0; i < numerator.size(); i++) {
         result *= numerator[i]->toDecimal();
@@ -393,7 +396,7 @@ double MultVecEx::toDecimal() {
     return result;
 }
 
-string MultVecEx::toString() {
+string MultiplicationVector::toString() {
     string result = "";
     for (int i = 0; i < numerator.size(); i++) {
         result += numerator[i]->toString();
@@ -408,11 +411,11 @@ string MultVecEx::toString() {
     return result;
 }
 
-Expression* MultVecEx::negative() {
+Expression* MultiplicationVector::negative() {
     Number* negone = new Number(-1);
     vector<Expression*> negvec;
     negvec.push_back(negone);
     negvec.push_back(this);
-    MultVecEx* negation = new MultVecEx(negvec);
+    MultiplicationVector* negation = new MultiplicationVector(negvec);
     return negation;
 }
