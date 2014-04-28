@@ -1,3 +1,7 @@
+/*
+	Written by James Steele
+*/
+
 #ifndef SHUNTINGYARD_H_INCLUDED
 #define SHUNTINGYARD_H_INCLUDED
 
@@ -10,17 +14,7 @@
 #include "binaryoperation.h"
 #include "shunting-stack.h"
 #include "expression-stack.h"
-#include "expression.h"
-#include "logarithm.h"
-#include "exponent.h"
-#include "number.h"
-#include "constant.h"
 
-class Expression;
-class Logarithm;
-class Exponent;
-class Number;
-class Constant;
 class shuntingStack;
 class expressionStack;
 
@@ -29,16 +23,24 @@ private:
 	std::string expression;
 	std::vector<std::string> tokens;
 	std::vector<BinaryOperation> operations;
-	std::vector<Expression> expressions;
+	shuntingStack shunting_yard_stack;
+	shuntingStack ordered_shunting_yard_stack;
+	shuntingStack result_stack;
+	expressionStack expression_stack;
+
 	void validate();
 	void collapse();
-	void identifyAll();
-	void toRPN();
 	std::string identify(std::string);
-	Logarithm createLogarithm(BinaryOperation);
-	Exponent createExponent(BinaryOperation);
-	Number createNumber(BinaryOperation);
-	Constant createConstant(BinaryOperation);
+	void identifyAll();
+	void toRPN(); // To Reverse Polish Notation
+	void toPN(); // To Polish Notation
+	void postFix();
+
+	void add(BinaryOperation);
+	void subtract(BinaryOperation);
+	void multiply(BinaryOperation);
+	void divide(BinaryOperation);
+	void exponentiate(BinaryOperation);
 public:
 	ShuntingYard(std::string);
 	std::vector<BinaryOperation> getShuntingYard();
