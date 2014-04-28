@@ -39,6 +39,34 @@ Expression* SumVecEx::add(Expression* ex) {
     return this;
 }
 
+Expression* SumExVec::subtract(Expression* ex) {
+    ex = ex->simplify();
+    vector<Expression*> summer;
+    if (expression.size() == 1) {
+        if (expression[0]->getName() == "Adding Vector") {
+            summer = expression[0]->getExpression();
+        }
+        else {
+            return expression[0]->subtract(ex);
+        }
+    }
+    else {
+        summer = expression;
+    }
+    summer.push_back(ex);
+    for (int i = 0; i < summer.size() - 1; i++) {
+        if (SumTerms[i]->getName() != "Adding Vector") {
+            Expression* temp = summer[i]->subtract(summer[summer.size() - 1]);
+            if (temp->getName() != "Adding Vector") {
+                summer[i] = temp;
+                summer.erase(summer.end() - 1);
+            }
+        }
+    }
+    expression = summer;
+    return this;
+}
+
 Expression* SumVecEx::multiply(Expression* ex) {
     ex = ex->simplify();
     if (expression.size() == 1) {
@@ -82,7 +110,7 @@ Expression* SumVecEx::simplify() {
             return tmpex[0];
         }
     }
-    
+
     if (expression[0]->getName() == "Multiply Vector") {
         return expression[0]->simplify();
     } else {
@@ -95,12 +123,12 @@ vector<Expression*> SumVecEx::simplifyVec(vector<Expression*> vecex) {
     for (int i = 0; i < exvec.size(); i++) {
         exvec[i] = exvec[i]->simplify();
     }
-    
+
     while (exvec.size() > 1) {
         exvec[0] = exvec[0]->add(exvec[1]);
         exvec.erase(exvec.begin() + 1);
     }
-    
+
     return exvec;
 }
 
@@ -131,10 +159,12 @@ double SumVecEx::toDecimal() {
     return n;
 }
 
+void SumVecEx::negative() {
+    for (int i = 0; i < expression.size(); i++) {
+        expression[i]->negative();
+    }
+}
+
 vector<Expression*> SumVecEx::getExpression() {
     return expression;
 }
-
-
-
-
