@@ -3,14 +3,14 @@
 #include <iostream>
 #include "expression.h"
 
-class SumVecEx : public Expression {
+class SummationVector : public Expression {
 private:
     vector<Expression*> expression;
 
 public:
-    SumVecEx();
-    SumVecEx(Expression* e1, Expression* e2);
-    SumVecEx(vector<Expression*> e);
+    SummationVector();
+    SummationVector(Expression* e1, Expression* e2);
+    SummationVector(vector<Expression*> e);
 
     Expression* add(Expression* ex);
     Expression* subtract(Expression* ex);
@@ -25,7 +25,7 @@ public:
 
     Expression* negative();
 
-    vector<Expression*> simplifyVec();
+    vector<Expression*> simplifyVec(vector<Expression*>);
     vector<Expression*> getExpression();
 
 };
