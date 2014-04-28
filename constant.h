@@ -3,6 +3,8 @@
 
 #include "expression.h"
 #include "number.h"
+#include "SumExVec.h"
+#include "MultVecEx.h"
 
 class Expression;
 class Fraction;
@@ -37,7 +39,7 @@ public:
 
 	void negative();
 
-	void simplify();
+	Expression* simplify();
 	void clear();
 	bool empty();
 
