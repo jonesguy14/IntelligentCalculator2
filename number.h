@@ -38,7 +38,7 @@ public:
 
 	void negative();
 
-	void simplify();
+	Expression* simplify();
 	void clear();
 	bool empty();
 
