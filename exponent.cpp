@@ -21,10 +21,10 @@ Expression* Exponent::add(Expression* addend){
 		vector<Expression*> ex;
 		ex.push_back(two);
 		ex.push_back(addend);
-		MultVecEx* retEx = new MultVecEx(ex);
+		MultiplicationVector* retEx = new MultiplicationVector(ex);
 		return retEx;
 	}
-	SumVecEx* retEx = new SumVecEx(this, addend);
+	SummationVector* retEx = new SummationVector(this, addend);
 	return retEx;
 }
 
@@ -48,7 +48,7 @@ Expression* Exponent::subtract(Expression* subtrahend){
 		return zero;
 	}
 	subtrahend->negative();
-	SumVecEx* retEx = new SumVecEx(this, subtrahend);
+	SummationVector* retEx = new SummationVector(this, subtrahend);
 	return retEx;
 
 }
@@ -69,14 +69,14 @@ bool Exponent::canSubtract(Expression* ex){
 Expression* Exponent::multiply(Expression* multiplicand){
 	if(canMultiply(multiplicand)){
         Exponent* exm = static_cast<Exponent*>(multiplicand);
-		SumVecEx* sumPows = new SumVecEx(this->getPower(),exm->getPower());
+		SummationVector* sumPows = new SummationVector(this->getPower(),exm->getPower());
 		Exponent* retEx = new Exponent(this->getBase(),sumPows);
 		return retEx;
 	}
 	vector<Expression*> ex;
 	ex.push_back(this);
 	ex.push_back(multiplicand);
-	MultVecEx* retEx = new MultVecEx(ex);
+	MultiplicationVector* retEx = new MultiplicationVector(ex);
 	return retEx;
 }
 
@@ -95,11 +95,11 @@ Expression* Exponent::divide(Expression* dividend){
 	if(canDivide(dividend)){
         Exponent* exd = static_cast<Exponent*>(dividend);
         exd->getPower()->negative();
-		SumVecEx* subtractPows = new SumVecEx(this->getPower(),exd->getPower());
+		SummationVector* subtractPows = new SummationVector(this->getPower(),exd->getPower());
 		Exponent* retEx = new Exponent(this->getBase(),subtractPows);
 		return retEx;
 	}
-	MultVecEx* retEx = new MultVecEx(this,dividend);
+	MultiplicationVector* retEx = new MultiplicationVector(this,dividend);
 	return retEx;
 
 }
@@ -145,8 +145,8 @@ Expression* Exponent::simplify(){
 		return evalExponent;
 	}
 	//Evaluate a fraction power if possible (including nth roots):
-	if((this->base.size() == 1) && (getBase()->getName() == "Number") && (getPower()->getName() == "MultVecEx")) {
-		MultVecEx* powm = static_cast<MultVecEx*>(getPower());
+	if((this->base.size() == 1) && (getBase()->getName() == "Number") && (getPower()->getName() == "MultiplicationVector")) {
+		MultiplicationVector* powm = static_cast<MultiplicationVector*>(getPower());
 		vector<Expression*> den;
 		den = powm->getDenominator();
 		vector<Expression*> num;
@@ -163,7 +163,7 @@ Expression* Exponent::simplify(){
 				Number* evalExp = new Number(newExp->simplify()->toDecimal());
 				Number* one = new Number(1);
 
-				MultVecEx* nrt = new MultVecEx(one,denominator);
+				MultiplicationVector* nrt = new MultiplicationVector(one,denominator);
 				Exponent* nrtExp = new Exponent(evalExp,nrt);
 
 				return nthRoot(nrtExp);
@@ -175,11 +175,11 @@ Expression* Exponent::simplify(){
 	return this;
 }
 
-Expression* Exponent::nthRoot(Exponent* exp){//Must pass in an Exponent with Number base and MultVecEx Fraction power with Number(1) numerator and Number denominator.
+Expression* Exponent::nthRoot(Exponent* exp){//Must pass in an Exponent with Number base and MultiplicationVector Fraction power with Number(1) numerator and Number denominator.
 
     	bool baseIsNeg = false;
     Exponent* eexp = static_cast<Exponent*>(exp);
-    MultVecEx* multe = static_cast<MultVecEx*>(eexp->getPower());
+    MultiplicationVector* multe = static_cast<MultiplicationVector*>(eexp->getPower());
 	int nrt = (multe->getDenominator()).at(0)->toDecimal();
         int base = eexp->getBase()->toDecimal();
         if(base < 0){
@@ -258,7 +258,7 @@ Expression* Exponent::nthRoot(Exponent* exp){//Must pass in an Exponent with Num
 	    vector<Expression*> vec;
 	    vec.push_back(retNum);
 	    vec.push_back(retExp);
-	    MultVecEx* retEx = new MultVecEx(vec);
+	    MultiplicationVector* retEx = new MultiplicationVector(vec);
 
 	    return retEx;
 
