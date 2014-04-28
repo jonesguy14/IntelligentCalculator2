@@ -159,10 +159,12 @@ double SumVecEx::toDecimal() {
     return n;
 }
 
-void SumVecEx::negative() {
+Expression* SumVecEx::negative() {
+    vector<Expression*> sumv;
     for (int i = 0; i < expression.size(); i++) {
-        expression[i]->negative();
+        sumv.push_back(expression[i]->negative());
     }
+    return sumv;
 }
 
 vector<Expression*> SumVecEx::getExpression() {
