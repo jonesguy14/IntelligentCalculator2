@@ -28,7 +28,7 @@ public:
     string getName();
     double toDecimal();
 
-    void negative();
+    Expression* negative();
 
     vector<Expression*> simplifyVec(vector<Expression*>);
     int GreatCommonFactor(int a, int b);
