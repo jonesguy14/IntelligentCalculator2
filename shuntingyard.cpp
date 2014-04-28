@@ -1,3 +1,7 @@
+/*
+	Written by James Steele
+*/
+
 #include "shuntingyard.h"
 
 void printVector(std::vector<std::string>);
@@ -13,6 +17,8 @@ ShuntingYard::ShuntingYard(std::string expression){
 	this->validate();
 	this->identifyAll();
 	this->toRPN();
+	this->toPN();
+	this->postFix();
 	//printVector(this->operations);
 }
 
@@ -237,14 +243,14 @@ std::string ShuntingYard::identify(std::string id){
 			if(!id[1]){
 				return "Constant";
 			}else{
-				throw "Invalid input";
+				throw "Invalid input: unexpected token found after euler's number";
 			}
 			break;
 		case 'p':
-			if(!id[2] && id[1] == 'i'){
+			if((!id[2] || id[2] == ')') && id[1] == 'i'){
 				return "Constant";
 			}else{
-				throw "Invalid input";
+				throw "Invalid input: unexpected token found after pi";
 			}
 			break;
 		case 'l':
@@ -272,12 +278,6 @@ void ShuntingYard::toRPN(){
 		which we'll use to evaluate our input
 	*/
 
-
-	/*
-		We need two stacks: one for our output and one for our operators
-	*/
-	shuntingStack shunting_yard_stack;
-	expressionStack expression_stack;
 	/*
 		Precedence
 		I could use a struct or a basic class for this, but it's easier to just use a primitive
@@ -299,19 +299,19 @@ void ShuntingYard::toRPN(){
 			/*
 				Set our priorities
 			*/
-			if(expression_stack.getTop() == "+"){
+			if(this->expression_stack.getTop() == "+"){
 				current	=	addition;
 			}
-			if(expression_stack.getTop() == "-"){
+			if(this->expression_stack.getTop() == "-"){
 				current	=	subtraction;
 			}
-			if(expression_stack.getTop() == "*"){
+			if(this->expression_stack.getTop() == "*"){
 				current	=	multiplication;
 			}
-			if(expression_stack.getTop() == "/"){
+			if(this->expression_stack.getTop() == "/"){
 				current	=	division;
 			}
-			if(expression_stack.getTop() == "^"){
+			if(this->expression_stack.getTop() == "^"){
 				current	=	exponentiation;
 			}
 
@@ -332,24 +332,98 @@ void ShuntingYard::toRPN(){
 			}
 
 			if(next > current){
-				expression_stack.push(i->getBinaryOperation());
+				this->expression_stack.push(i->getBinaryOperation());
 			}
 			if(next <= current){
-				BinaryOperation temp(expression_stack.getTop(), "Operation");
-				shunting_yard_stack.push(temp);
-				expression_stack.pop();
-				expression_stack.push(i->getBinaryOperation());
+				BinaryOperation temp(this->expression_stack.getTop(), "Operation");
+				this->shunting_yard_stack.push(temp);
+				this->expression_stack.pop();
+				this->expression_stack.push(i->getBinaryOperation());
 			}
 		}else{
-			shunting_yard_stack.push(*i);
+			this->shunting_yard_stack.push(*i);
 		}
 	}
 	while(!expression_stack.isEmpty()){
-		std::string temp_operator	=	expression_stack.pop();
+		std::string temp_operator	=	this->expression_stack.pop();
 		BinaryOperation temp(temp_operator, "Operator");
-		shunting_yard_stack.push(temp);
+		this->shunting_yard_stack.push(temp);
 	}
-	std::cout << shunting_yard_stack.toString() << std::endl;
+}
+
+void ShuntingYard::toPN(){
+	while(!this->shunting_yard_stack.isEmpty()){
+		this->ordered_shunting_yard_stack.push(this->shunting_yard_stack.getTop());
+		this->shunting_yard_stack.pop();
+	}
+}
+
+void ShuntingYard::postFix(){
+	while(!this->ordered_shunting_yard_stack.isEmpty()){
+		switch(this->ordered_shunting_yard_stack.getTop().getBinaryOperation()[0]){
+			case '+':{
+				std::string r	=	"Added " + this->result_stack.getTop().toString() + " and ";
+				this->result_stack.pop();
+				r				=	r + this->result_stack.getTop().toString();
+				this->result_stack.pop();
+				BinaryOperation temp("+", "A", "B", "Operator");
+				r				=	r + " to get a value of " + temp.toString();
+				std::cout << r << std::endl;
+				this->result_stack.push(temp);
+				break;
+			}
+			case '-':{
+				std::string r	=	"Subtracted " + this->result_stack.getTop().toString() + " and ";
+				this->result_stack.pop();
+				r				=	r + this->result_stack.getTop().toString();
+				this->result_stack.pop();
+				BinaryOperation temp("-", "A", "B", "Operator");
+				r				=	r + " to get a value of " + temp.toString();
+				std::cout << r << std::endl;
+				this->result_stack.push(temp);
+				break;
+			}
+			case '*':{
+				std::string r	=	"Multiplied " + this->result_stack.getTop().toString() + " and ";
+				this->result_stack.pop();
+				r				=	r + this->result_stack.getTop().toString();
+				this->result_stack.pop();
+				BinaryOperation temp("*", "A", "B", "Operator");
+				r				=	r + " to get a value of " + temp.toString();
+				std::cout << r << std::endl;
+				this->result_stack.push(temp);
+				break;
+			}
+			case '/':{
+				std::string r	=	"Divided " + this->result_stack.getTop().toString() + " and ";
+				this->result_stack.pop();
+				r				=	r + this->result_stack.getTop().toString();
+				this->result_stack.pop();
+				BinaryOperation temp("/", "B", "A", "Operator");
+				r				=	r + " to get a value of " + temp.toString();
+				std::cout << r << std::endl;
+				this->result_stack.push(temp);
+				break;
+			}
+			case '^':{
+				std::string r	=	" to the power of " + this->result_stack.getTop().toString();
+				this->result_stack.pop();
+				r				=	"Took " + this->result_stack.getTop().toString() + r;
+				this->result_stack.pop();
+				BinaryOperation temp("^", "A", "B", "Operator");
+				r				=	r + " to get a value of " + temp.toString();
+				std::cout << r << std::endl;
+				this->result_stack.push(temp);
+				break;
+			}
+			default:
+				this->result_stack.push(this->ordered_shunting_yard_stack.getTop());
+				break;
+		}
+
+		this->ordered_shunting_yard_stack.pop();
+	}
+	this->result_stack.toString();
 }
 
 std::vector<BinaryOperation> ShuntingYard::getShuntingYard(){
