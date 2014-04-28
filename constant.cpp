@@ -8,44 +8,41 @@ Constant::Constant(std::string value){
 
 Expression* Constant::add(Expression* value){
 	if(value->getName() == "Constant"){
-		Expression* temp	=	value->getValue1();
+        Constant* valc = static_cast<Constant*>(value);
+        Expression* temp	=	valc->getValue1();
 		this->coefficient.push_back(this->coefficient.back()->add(temp));
 		return this;
 	}else{
-		Expression* temp	=	new Expression(this);
-		temp->add(value);
-		return temp;
+		SumVecEx* sum = new SumVecEx(this, value);
+		return sum;
 	}
 }
 
 Expression* Constant::subtract(Expression* value){
 	if(value->getName() == "Constant"){
-		Expression* temp	=	value->getValue1();
+        Constant* valc = static_cast<Constant*>(value);
+		Expression* temp	=	valc->getValue1();
 		this->coefficient.push_back(this->coefficient.back()->subtract(temp));
 		return this;
 	}else{
-		Expression* temp	=	new Expression(this);
-		temp->subtract(value);
-		return temp;
+	    value->negative();
+		SumVecEx* sum = new SumVecEx(this, value);
+		return sum;
 	}
 }
 
 Expression* Constant::multiply(Expression* value){
-	Expression* temp	=	new Expression(this);
-	temp->multiply(value);
-	return temp;
+    Number* one = new Number(1);
+	MultVecEx* multy = new MultVecEx(this, one);
+	Expression* ex = multy->multiply(value);
+	return ex;
 }
 
 Expression* Constant::divide(Expression* value){
-	Expression* temp	=	new Expression(this);
-	temp->multiply(value);
-	return temp;
-}
-
-Expression* Constant::exponentiate(Expression* value){
-	Expression* temp	=	new Expression(this);
-	temp->exponentiate(value);
-	return temp;
+	Number* one = new Number(1);
+	MultVecEx* multy = new MultVecEx(this, one);
+	Expression* ex = multy->divide(value);
+	return ex;
 }
 
 bool Constant::canAdd(Expression* value){
@@ -72,8 +69,8 @@ void Constant::negative(){
 	this->coefficient.back()->negative();
 }
 
-void Constant::simplify(){
-	// Do nothing
+Expression* Constant::simplify(){
+	return this;
 }
 void Constant::clear(){
 	this->coefficient.clear();
