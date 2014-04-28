@@ -6,16 +6,16 @@
 #include "number.h"
 #include "SumExVec.h"
 
-class MultVecEx : public Expression {
+class MultiplicationVector : public Expression {
 private:
     vector<Expression*> numerator;
     vector<Expression*> denominator;
 
 public:
-    MultVecEx();
-    MultVecEx(Expression* numerator, Expression* denominator);
-    MultVecEx(vector<Expression*> numerator, vector<Expression*> denominator);
-    MultVecEx(vector<Expression*> numerator);
+    MultiplicationVector();
+    MultiplicationVector(Expression* numerator, Expression* denominator);
+    MultiplicationVector(vector<Expression*> numerator, vector<Expression*> denominator);
+    MultiplicationVector(vector<Expression*> numerator);
 
     Expression* add(Expression* ex);
     Expression* subtract(Expression* ex);
