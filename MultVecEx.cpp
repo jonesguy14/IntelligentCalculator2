@@ -409,5 +409,5 @@ string MultVecEx::toString() {
 }
 
 void MultVecEx::negative() {
-    expression[0]->negative();
+    numerator[0]->negative();
 }
