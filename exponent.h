@@ -1,4 +1,10 @@
+#ifndef EXPONENT_H_
+#define EXPONENT_H_
+
 #include "expression.h"
+#include "number.h"
+#include "MultVecEx.h"
+#include "SumExVec.h"
 
 class Expression;
 class Fraction;
@@ -10,30 +16,30 @@ class Polynomial;
 
 class Exponent : public Expression{
 private:
-	vector<Expression> base;
-	vector<Expression> power;
+	vector<Expression*> base;
+	vector<Expression*> power;
 
 public:
-	Exponent(Expression, Expression);
-	Expression* add(Expression* ex);
-	Expression* subtract(Expression* ex);
+	Exponent(Expression*, Expression*);
 
-	Expression* multiply(Expression* ex);
-	Expression* divide(Expression* ex);
+	Expression* getBase();
+	Expression* getPower();
 
-	Expression* exponentiate(Expression* ex);
+	Expression* add(Expression*);
+	Expression* subtract(Expression*);
+	Expression* multiply(Expression*);
+	Expression* divide(Expression*);
 
-	bool canAdd(Expression* ex);
-	bool canSubtract(Expression* ex);
 
-	bool canMultiply(Expression* ex);
-	bool canDivide(Expression* ex);
+	bool canAdd(Expression*);
+	bool canSubtract(Expression*);
+	bool canMultiply(Expression*);
+	bool canDivide(Expression*);
 
-	bool canExponentiate(Expression* ex);
+	Expression* negative();
 
-	void negative();
-
-	void simplify();
+	Expression* simplify();
+	Expression* nthRoot(Exponent*);
 	void clear();
 	bool empty();
 
@@ -41,3 +47,5 @@ public:
 	double toDecimal();
 	string getName();
 };
+
+#endif
