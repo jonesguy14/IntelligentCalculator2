@@ -1,3 +1,7 @@
+/*
+	Written by James Steele
+*/
+
 #ifndef NUMBER_H_
 #define NUMBER_H_
 
@@ -11,7 +15,8 @@ class Fraction;
 class Logarithm;
 class Exponent;
 class Constant;
-class Polynomial;
+class MultiplicationVector;
+class SummationVector;
 
 class Number : public Expression{
 private:
@@ -26,21 +31,8 @@ public:
 	Expression* multiply(Expression* ex);
 	Expression* divide(Expression* ex);
 
-	Expression* exponentiate(Expression* ex);
-
-	bool canAdd(Expression* ex);
-	bool canSubtract(Expression* ex);
-
-	bool canMultiply(Expression* ex);
-	bool canDivide(Expression* ex);
-
-	bool canExponentiate(Expression* ex);
-
-	void negative();
-
+	Expression* negative();
 	Expression* simplify();
-	void clear();
-	bool empty();
 
 	string toString();
 	double toDecimal();
