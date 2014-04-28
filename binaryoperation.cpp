@@ -1,3 +1,7 @@
+/*
+	Written by James Steele
+*/
+
 #include "binaryoperation.h"
 
 BinaryOperation::BinaryOperation(std::string operation, std::string type){
@@ -26,5 +30,5 @@ std::string BinaryOperation::getBinaryType(){
 }
 
 std::string BinaryOperation::toString(){
-	return "Operation: " + this->binary_operation + "\n\tLeft operand: " + this->binary_left + "\n\tRight operand: " + this->binary_right;
+	return this->binary_operation + "(" + this->binary_left + ", " + this->binary_right + ")";
 }
