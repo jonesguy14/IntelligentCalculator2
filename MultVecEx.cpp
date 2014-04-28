@@ -408,6 +408,11 @@ string MultVecEx::toString() {
     return result;
 }
 
-void MultVecEx::negative() {
-    numerator[0]->negative();
+Expression* MultVecEx::negative() {
+    Number* negone = new Number(-1);
+    vector<Expression*> negvec;
+    negvec.push_back(negone);
+    negvec.push_back(this);
+    MultVecEx* negation = new MultVecEx(negvec);
+    return negation;
 }
