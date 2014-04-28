@@ -1,17 +1,20 @@
-#include "SumVecEx.h"
+/*
+    Author: Achi Jones
+*/
+#include "SummationVector.h"
 
 using namespace std;
 
-SumVecEx::SumVecEx(Expression* e1, Expression* e2) {
+SummationVector::SummationVector(Expression* e1, Expression* e2) {
     expression.push_back(e1);
     expression.push_back(e2);
 }
 
-SumVecEx::SumVecEx(vector<Expression*> e) {
+SummationVector::SummationVector(vector<Expression*> e) {
     expression = e;
 }
 
-Expression* SumVecEx::add(Expression* ex) {
+Expression* SummationVector::add(Expression* ex) {
     ex = ex->simplify();
     vector<Expression*> summer;
     if (expression.size() == 1) {
@@ -67,7 +70,7 @@ Expression* SumExVec::subtract(Expression* ex) {
     return this;
 }
 
-Expression* SumVecEx::multiply(Expression* ex) {
+Expression* SummationVector::multiply(Expression* ex) {
     ex = ex->simplify();
     if (expression.size() == 1) {
         return expression[0]->multiply(ex);
@@ -89,20 +92,20 @@ Expression* SumVecEx::multiply(Expression* ex) {
     for (int i = 0; i < res_sum.size(); i++) {
         res_sum[i] = res_sum[i]->multiply(ex);
     }
-    SumExVec* result = new SumVecEx(res_sum);
+    SumExVec* result = new SummationVector(res_sum);
     return result;
 }
 
-Expression* SumVecEx::divide(Expression* ex) {
+Expression* SummationVector::divide(Expression* ex) {
     vector<Expression*> res_sum = expression;
     for (int i = 0; i < res_sum.size(); i++) {
         res_sum[i] = res_sum[i]->divide(ex);
     }
-    SumExVec* result = new SumVecEx(res_sum);
+    SumExVec* result = new SummationVector(res_sum);
     return result;
 }
 
-Expression* SumVecEx::simplify() {
+Expression* SummationVector::simplify() {
     expression = simplifyVec(expression);
     if (expression[0]->getName() == "Adding Vector") {
         vector<Expression*> tmpex = expression[0]->getExpression();
@@ -119,7 +122,7 @@ Expression* SumVecEx::simplify() {
     return expression[0];
 }
 
-vector<Expression*> SumVecEx::simplifyVec(vector<Expression*> vecex) {
+vector<Expression*> SummationVector::simplifyVec(vector<Expression*> vecex) {
     for (int i = 0; i < exvec.size(); i++) {
         exvec[i] = exvec[i]->simplify();
     }
@@ -132,11 +135,11 @@ vector<Expression*> SumVecEx::simplifyVec(vector<Expression*> vecex) {
     return exvec;
 }
 
-string SumVecEx::getName() {
+string SummationVector::getName() {
     return "Adding Vector";
 }
 
-string SumVecEx::toString() {
+string SummationVector::toString() {
     string result = "";
     for (int i = 0; i < expression.size(); i++) {
         if (expression[i]->toDouble() != 0) {
@@ -151,7 +154,7 @@ string SumVecEx::toString() {
     return result;
 }
 
-double SumVecEx::toDecimal() {
+double SummationVector::toDecimal() {
     double n = 0;
     for (int i = 0; i < expression.size(); i++) {
         n += expression[i]->toDouble();
@@ -159,7 +162,7 @@ double SumVecEx::toDecimal() {
     return n;
 }
 
-Expression* SumVecEx::negative() {
+Expression* SummationVector::negative() {
     vector<Expression*> sumv;
     for (int i = 0; i < expression.size(); i++) {
         sumv.push_back(expression[i]->negative());
@@ -167,6 +170,6 @@ Expression* SumVecEx::negative() {
     return sumv;
 }
 
-vector<Expression*> SumVecEx::getExpression() {
+vector<Expression*> SummationVector::getExpression() {
     return expression;
 }
