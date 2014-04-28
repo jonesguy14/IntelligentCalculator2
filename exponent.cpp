@@ -21,7 +21,7 @@ Expression* Exponent::add(Expression* addend){
 		vector<Expression*> ex;
 		ex.push_back(two);
 		ex.push_back(addend);
-		MultVecEx* retEx = new MultExVec(ex);
+		MultVecEx* retEx = new MultVecEx(ex);
 		return retEx;
 	}
 	SumVecEx* retEx = new SumVecEx(this, addend);
@@ -115,9 +115,10 @@ bool Exponent::canDivide(Expression* ex){
 	return false;
 }
 
-void Exponent::negative(){
+Expression* Exponent::negative(){
 	if (sign=='+') {sign = '-';}
 	else {sign = '+';}
+	return this;
 }
 
 char Exponent::getSign() {
@@ -137,24 +138,25 @@ Expression* Exponent::simplify(){
 		return zero;
 	}
 	if((getBase()->toDecimal() == 0) && (getPower()->toDecimal() == 0)){
-		throw Exceptions("Exponent Class: Entire expression is undefined");
+		throw "Exponent Class: Entire expression is undefined";
 	}
 	if(abs(pow(getBase()->toDecimal(),getPower()->toDecimal()) - floor(pow(getBase()->toDecimal(),getPower()->toDecimal()))) <= .001){
 		Number* evalExponent = new Number(pow(getBase()->toDecimal(),getPower()->toDecimal()));
 		return evalExponent;
 	}
 	//Evaluate a fraction power if possible (including nth roots):
-	if((this->base.size() == 1) && (getBase()->getName() == "Number") && (getPower()->getName() == "MultVecEx"){
+	if((this->base.size() == 1) && (getBase()->getName() == "Number") && (getPower()->getName() == "MultVecEx")) {
+		MultVecEx* powm = static_cast<MultVecEx*>(getPower());
 		vector<Expression*> den;
-		den.push_back(getPower()->getDenominator());
+		den = powm->getDenominator();
 		vector<Expression*> num;
-		num.push_back(getPower()->getNumerator());
+		num = powm->getNumerator();
 		if(den.size() == 1 && den.at(0)->getName() == "Number" && num.size() == 1 && num.at(0)->getName() == "Number"){//check if the power is a Number fraction
 
 		// The following code will try and simplify the fraction exponent through prime factorization of the exponents' base
 
-			Number* numerator = new Number(num.at(0));
-			Number* denominator = new Number(den.at(0));
+			Number* numerator = new Number(num.at(0)->toDecimal());
+			Number* denominator = new Number(den.at(0)->toDecimal());
 
 			if(numerator->toDecimal() != 1){//check if the fraction is not an nth root
 				Exponent* newExp = new Exponent(this->getBase(),numerator);
@@ -177,8 +179,8 @@ Expression* Exponent::nthRoot(Exponent* exp){//Must pass in an Exponent with Num
 
     	bool baseIsNeg = false;
     Exponent* eexp = static_cast<Exponent*>(exp);
-    MultExVec* multe = static_cast<MultVecEx*>(eexp->getPower());
-	int nrt = multe->getDenominator()->toDecimal();
+    MultVecEx* multe = static_cast<MultVecEx*>(eexp->getPower());
+	int nrt = (multe->getDenominator()).at(0)->toDecimal();
         int base = eexp->getBase()->toDecimal();
         if(base < 0){
           	baseIsNeg = true;
@@ -251,7 +253,8 @@ Expression* Exponent::nthRoot(Exponent* exp){//Must pass in an Exponent with Num
             }
 
  	    Number* retNum = new Number(coeff);
-	    Exponent* retExp = new Exponent(newBase,eexp->getPower());
+ 	    Number* basenum = new Number(newBase);
+	    Exponent* retExp = new Exponent(basenum, eexp->getPower());
 	    vector<Expression*> vec;
 	    vec.push_back(retNum);
 	    vec.push_back(retExp);
