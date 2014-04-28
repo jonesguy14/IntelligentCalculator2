@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include "expression.h"
+#include "number.h"
+#include "SumExVec.h"
 
 class MultVecEx : public Expression {
 private:
@@ -28,7 +30,7 @@ public:
 
     void negative();
 
-    vector<Expression*> simplifyVec();
+    vector<Expression*> simplifyVec(vector<Expression*>);
     int GreatCommonFactor(int a, int b);
 
     vector<Expression*> getNumerator();
