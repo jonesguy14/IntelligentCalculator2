@@ -1,7 +1,7 @@
 /*
     Author: Achi Jones
 */
-#include "SummationVector.h"
+#include "SumExVec.h"
 
 using namespace std;
 
