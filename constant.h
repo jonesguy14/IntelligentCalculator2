@@ -21,6 +21,8 @@ private:
 
 public:
 	Constant(std::string);
+	Constant(std::string, Expression*);
+
 	Expression* add(Expression* ex);
 	Expression* subtract(Expression* ex);
 
@@ -37,17 +39,19 @@ public:
 
 	bool canExponentiate(Expression* ex);
 
-	void negative();
+	Expression* negative();
 
 	Expression* simplify();
 	void clear();
 	bool empty();
 
-	string toString();
+	std::string toString();
 	double toDecimal();
-	string getName();
+	std::string getName();
 
-	Expression* getValue1();
+	std::string getType();
+
+	Expression* getCoeff();
 };
 
 #endif
