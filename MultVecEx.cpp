@@ -26,7 +26,6 @@ Expression* MultiplicationVector::subtract(Expression* ex) {
 }
 
 Expression* MultiplicationVector::add(Expression* ex) {
-    cout<<"I AM THE SAVIOR"<<endl;
     if (numerator.size() == 1) {
         if (numerator[0]->getName() == "Multiply Vector") {
             //Expression* element = MultiplicationVector(numerator[0]);
@@ -43,7 +42,6 @@ Expression* MultiplicationVector::add(Expression* ex) {
     }
 
     if (ex->getName() == "Multiply Vector") {
-        cout<<"I LIVE TO SERVE"<<endl;
         MultiplicationVector* exmult = static_cast<MultiplicationVector*>(ex);
         vector<Expression*> ex_num = exmult->getNumerator();
         vector<Expression*> ex_den = exmult->getDenominator();
@@ -73,7 +71,6 @@ Expression* MultiplicationVector::add(Expression* ex) {
             ex_den_val *= ex_den[j]->toDecimal();
         }
         if (abs(ex_den_val - den_val) < 0.000001) { //same denominator
-            cout<<"WE ARE ONE AND THE SAME"<<endl;
             if (numerator.size() == 1 && ex_num.size() == 1) {
                 numerator[0] = numerator[0]->add(ex_num[0]);
                 return this;
@@ -100,7 +97,6 @@ Expression* MultiplicationVector::add(Expression* ex) {
                         }
                         Expression* tryDivide = numerator[i]->divide(ex_num[j]);
                         if (tryDivide->getName()!="Multiply Vector" && tryDivide->getName()!="Adding Vector") {
-                            cout<<"I divide success at: "<<i<<j<<endl;
                             result_vec.push_back(ex_num[j]);
                             Number* one_int = new Number(1);
                             ex_num[j] = one_int;
@@ -110,7 +106,6 @@ Expression* MultiplicationVector::add(Expression* ex) {
                         else {
                             Expression* otherDivide = ex_num[j]->divide(numerator[i]);
                             if (otherDivide->getName()!="Multiply Vector" && otherDivide->getName()!="Adding Vector") {
-                                cout<<"i divide success 2";
                                 result_vec.push_back(numerator[i]);
                                 Number* one_int = new Number(1);
                                 numerator[i] = one_int;
