@@ -195,7 +195,7 @@ void ShuntingYard::identifyAll(){
 			left	=	i->substr(pos);
 			left	=	left.substr(1);
 
-			BinaryOperation binary("Exponent", left, right, "Exponent");
+			BinaryOperation binary("Square root", left, right, "Square root");
 			this->operations.push_back(binary);
 		}
 		if(id == "Nth root"){
@@ -208,7 +208,7 @@ void ShuntingYard::identifyAll(){
 			left		=	i->substr(pos);
 			left		=	left.substr(1);
 
-			BinaryOperation binary("Exponent", left, right, "Exponent");
+			BinaryOperation binary("Nth root", left, right, "Nth root");
 			this->operations.push_back(binary);
 		}
 		if(id == "Expression"){
@@ -408,6 +408,16 @@ void ShuntingYard::postFix(){
 				if(operationtype == "Number"){
 					Number* temp	=	new Number(atoi(this->ordered_shunting_yard_stack.getTop().getBinaryOperation().c_str()));
 					this->result_stack.push(temp);
+				}
+				if(operationtype == "Constant"){
+					Constant* temp	=	new Constant(this->ordered_shunting_yard_stack.getTop().getBinaryOperation().c_str());
+					this->result_stack.push(temp);
+				}
+				if(operationtype == "Nth root"){
+					ShuntingYard* power	=	new ShuntingYard(this->ordered_shunting_yard_stack.getTop().getBinaryRight());
+					ShuntingYard* base	=	new ShuntingYard(this->ordered_shunting_yard_stack.getTop().getBinaryLeft());
+					Exponent* temp		=	new Exponent(base->getResult(), power->getResult());
+					this->result_stack.push(temp->simplify());
 				}
 				break;
 		}
