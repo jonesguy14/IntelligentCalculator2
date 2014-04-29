@@ -276,7 +276,14 @@ bool Exponent::empty(){
 }
 
 std::string Exponent::toString(){
-	return this->getBase()->toString() + "^(" + this->getPower()->toString() + ")";
+	if (this->getPower()->getName() == "Multiply Vector") {
+		MultiplicationVector* powmul = static_cast<MultiplicationVector*>(this->getPower());
+		if(powmul->getNumerator().back()->toDecimal() == 1 && powmul->getDenominator().size()>0) {
+			return powmul->getDenominator().back()->toString() + "rt:" + this->getBase()->toString();
+		}
+	}else{
+		return this->getBase()->toString() + "^(" + this->getPower()->toString() + ")";
+	}
 }
 
 std::string Exponent::getName(){
