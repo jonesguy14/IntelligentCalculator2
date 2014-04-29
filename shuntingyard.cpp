@@ -362,68 +362,61 @@ void ShuntingYard::postFix(){
 	while(!this->ordered_shunting_yard_stack.isEmpty()){
 		switch(this->ordered_shunting_yard_stack.getTop().getBinaryOperation()[0]){
 			case '+':{
-				std::string r	=	"Added " + this->result_stack.getTop().toString() + " and ";
+				vector<Expression*> temp_vector;
+				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				r				=	r + this->result_stack.getTop().toString();
+				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				BinaryOperation temp("+", "A", "B", "Operator");
-				r				=	r + " to get a value of " + temp.toString();
-				std::cout << r << std::endl;
-				this->result_stack.push(temp);
+				this->result_stack.push(temp_vector[0]->add(temp_vector[1]));
 				break;
 			}
 			case '-':{
-				std::string r	=	"Subtracted " + this->result_stack.getTop().toString() + " and ";
+				vector<Expression*> temp_vector;
+				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				r				=	r + this->result_stack.getTop().toString();
+				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				BinaryOperation temp("-", "A", "B", "Operator");
-				r				=	r + " to get a value of " + temp.toString();
-				std::cout << r << std::endl;
-				this->result_stack.push(temp);
+				this->result_stack.push(temp_vector[1]->subtract(temp_vector[0]));
 				break;
 			}
 			case '*':{
-				std::string r	=	"Multiplied " + this->result_stack.getTop().toString() + " and ";
+				vector<Expression*> temp_vector;
+				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				r				=	r + this->result_stack.getTop().toString();
+				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				BinaryOperation temp("*", "A", "B", "Operator");
-				r				=	r + " to get a value of " + temp.toString();
-				std::cout << r << std::endl;
-				this->result_stack.push(temp);
+				this->result_stack.push(temp_vector[0]->multiply(temp_vector[1]));
 				break;
 			}
 			case '/':{
-				std::string r	=	"Divided " + this->result_stack.getTop().toString() + " and ";
+				vector<Expression*> temp_vector;
+				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				r				=	r + this->result_stack.getTop().toString();
+				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				BinaryOperation temp("/", "B", "A", "Operator");
-				r				=	r + " to get a value of " + temp.toString();
-				std::cout << r << std::endl;
-				this->result_stack.push(temp);
+				this->result_stack.push(temp_vector[1]->divide(temp_vector[0]));
 				break;
 			}
 			case '^':{
-				std::string r	=	" to the power of " + this->result_stack.getTop().toString();
-				this->result_stack.pop();
-				r				=	"Took " + this->result_stack.getTop().toString() + r;
-				this->result_stack.pop();
-				BinaryOperation temp("^", "A", "B", "Operator");
-				r				=	r + " to get a value of " + temp.toString();
-				std::cout << r << std::endl;
-				this->result_stack.push(temp);
 				break;
 			}
 			default:
-				this->result_stack.push(this->ordered_shunting_yard_stack.getTop());
+				std::string operationtype	=	this->ordered_shunting_yard_stack.getTop().getBinaryType();
+				if(operationtype == "Logarithm"){
+					// Do nothing
+				}
+				if(operationtype == "Number"){
+					Number* temp	=	new Number(atoi(this->ordered_shunting_yard_stack.getTop().getBinaryOperation().c_str()));
+					this->result_stack.push(temp);
+				}
 				break;
 		}
-
 		this->ordered_shunting_yard_stack.pop();
 	}
-	this->result_stack.toString();
+}
+
+Expression* ShuntingYard::getResult(){
+	return this->result_stack.getTop();
 }
 
 std::vector<BinaryOperation> ShuntingYard::getShuntingYard(){
@@ -490,7 +483,7 @@ bool isNumber(std::string str){
 	unsigned int c				=	str.length();
 	unsigned int decimal_count	=	0;
 	for(unsigned int i = 0; i < c; i++){
-		if(!(str[i] < 57 && str[i] > 47)){
+		if(!(str[i] <= 57 && str[i] > 47)){
 			return false;
 		}
 	}
