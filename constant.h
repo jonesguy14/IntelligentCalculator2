@@ -3,7 +3,7 @@
 
 #include "expression.h"
 #include "number.h"
-#include "SumExVec.h"
+#include "SumVecEx.h"
 #include "MultVecEx.h"
 
 class Expression;
@@ -29,21 +29,9 @@ public:
 	Expression* multiply(Expression* ex);
 	Expression* divide(Expression* ex);
 
-	Expression* exponentiate(Expression* ex);
-
-	bool canAdd(Expression* ex);
-	bool canSubtract(Expression* ex);
-
-	bool canMultiply(Expression* ex);
-	bool canDivide(Expression* ex);
-
-	bool canExponentiate(Expression* ex);
-
 	Expression* negative();
 
 	Expression* simplify();
-	void clear();
-	bool empty();
 
 	std::string toString();
 	double toDecimal();
