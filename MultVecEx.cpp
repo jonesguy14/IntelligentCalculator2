@@ -27,7 +27,7 @@ Expression* MultiplicationVector::subtract(Expression* ex) {
 
 Expression* MultiplicationVector::add(Expression* ex) {
     if (numerator.size() == 1) {
-        if (numerator[0]->getName() == "Multiplication Vector") {
+        if (numerator[0]->getName() == "Multiply Vector") {
             //Expression* element = MultiplicationVector(numerator[0]);
             MultiplicationVector* nummy = static_cast<MultiplicationVector*>(numerator[0]);
             numerator = nummy->getNumerator();
@@ -41,13 +41,13 @@ Expression* MultiplicationVector::add(Expression* ex) {
         return ex->add(this);
     }
 
-    if (ex->getName() == "Multiplication Vector") {
+    if (ex->getName() == "Multiply Vector") {
         MultiplicationVector* exmult = static_cast<MultiplicationVector*>(ex);
         vector<Expression*> ex_num = exmult->getNumerator();
         vector<Expression*> ex_den = exmult->getDenominator();
 
         if (numerator.size()==1 && denominator.size()==1 && ex_num.size()==1 && ex_den.size()==1) {
-            if (numerator[0]->getName()=="Integer" && denominator[0]->getName()=="Integer" && ex_num[0]->getName()=="Integer" && ex_den[0]->getName()=="Integer") {
+            if (numerator[0]->getName()=="Number" && denominator[0]->getName()=="Number" && ex_num[0]->getName()=="Number" && ex_den[0]->getName()=="Number") {
                 //if its a fraction with integers, simplify the fraction
                 int num_int = (int)(numerator[0]->toDecimal() * ex_den[0]->toDecimal() + ex_num[0]->toDecimal() * denominator[0]->toDecimal());
                 int den_int = (int)(denominator[0]->toDecimal() * ex_den[0]->toDecimal());
@@ -127,15 +127,15 @@ Expression* MultiplicationVector::add(Expression* ex) {
         }
     }
 
-    if (ex->getName()!="Integer" && ex->getName()!="Adding Vector" && ex->getName()!="Multiplication Vector") {
+    if (ex->getName()!="Number" && ex->getName()!="Adding Vector" && ex->getName()!="Multiply Vector") {
         for (int i = 0; i < numerator.size(); i++) {
             if (abs(numerator[i]->toDecimal() - ex->toDecimal()) < 0.0001) {
                 if (numerator.size() == 2) {
-                    if (numerator[0]->getName() == "Integer") {
+                    if (numerator[0]->getName() == "Number") {
                         Number* int_one = new Number(1);
                         numerator[0] = numerator[0]->add(int_one);
                         }
-                    else if (numerator[1]->getName() == "Integer") {
+                    else if (numerator[1]->getName() == "Number") {
                         Number* int_one = new Number(1);
                         numerator[1] = numerator[1]->add(int_one);
                         }
@@ -160,8 +160,8 @@ Expression* MultiplicationVector::add(Expression* ex) {
         }
     }
 
-    if (numerator.size() == 1 && denominator.size() == 1 && ex->getName() == "Integer") {
-        if (numerator[0]->getName() == "Integer" && denominator[0]->getName() == "Integer") {
+    if (numerator.size() == 1 && denominator.size() == 1 && ex->getName() == "Number") {
+        if (numerator[0]->getName() == "Number" && denominator[0]->getName() == "Number") {
             return ex->add(this);
         }
     }
@@ -178,8 +178,8 @@ Expression* MultiplicationVector::multiply(Expression* ex) {
         return ex->multiply(this);
     }
 
-    if (ex->getName() == "Integer" && denominator.size() == 1 && numerator.size() == 1) {
-        if (denominator[0]->getName() == "Integer" && numerator[0]->getName() == "Integer") {
+    if (ex->getName() == "Number" && denominator.size() == 1 && numerator.size() == 1) {
+        if (denominator[0]->getName() == "Number" && numerator[0]->getName() == "Number") {
             numerator.push_back(ex);
             return this->simplify();
         }
@@ -264,7 +264,7 @@ Expression* MultiplicationVector::divide(Expression* ex) {
             vector<Expression*> onum = em->getNumerator();
             vector<Expression*> oden = em->getDenominator();
             if (onum.size() > 0 && oden.size() > 0) {
-                if (onum[0]->getName() == "Integer" && oden[0]->getName() == "Integer") {
+                if (onum[0]->getName() == "Number" && oden[0]->getName() == "Number") {
                     numerator[i] = onum[0];
                     multys[multys.size() - 1] = oden[0];
                 }
@@ -311,6 +311,19 @@ Expression* MultiplicationVector::simplify() {
     if (toDecimal() == round(toDecimal())) {
         Number* reduced = new Number(round(toDecimal()));
         return reduced;
+    }
+    if (numerator.size()==1 && denominator.size()==1) {
+        if (numerator[0]->getName() == "Number" && denominator[0]->getName() == "Number") {
+            int in = numerator[0]->toDecimal();
+            int id = denominator[0]->toDecimal();
+            int gcf = GreatCommonFactor(in, id);
+            in /= gcf;
+            id /= gcf;
+            Number* newn = new Number(in);
+            Number* newd = new Number(id);
+            MultiplicationVector* result = new MultiplicationVector(newn, newd);
+            return result;
+        }
     }
     numerator = simplifyVec(numerator);
     denominator = simplifyVec(denominator);
