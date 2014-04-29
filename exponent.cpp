@@ -2,7 +2,6 @@
 #include <stdio.h>
 
 Exponent::Exponent(Expression* base, Expression* power){
-    this->sign = '+';
 	this->base.push_back(base);
 	this->power.push_back(power);
 }
@@ -62,8 +61,7 @@ bool Exponent::canSubtract(Expression* ex){
 			return true;
 		}
 	}
-	else
-		return false;
+	return false;
 }
 
 Expression* Exponent::multiply(Expression* multiplicand){
@@ -116,13 +114,12 @@ bool Exponent::canDivide(Expression* ex){
 }
 
 Expression* Exponent::negative(){
-	if (sign=='+') {sign = '-';}
-	else {sign = '+';}
-	return this;
-}
-
-char Exponent::getSign() {
-    return sign;
+	Number* negone = new Number(-1);
+	vector<Expression*> mul;
+	mul.push_back(negone);
+	mul.push_back(this);
+	MultiplicationVector* negation = new MultiplicationVector(mul);
+	return negation;
 }
 
 Expression* Exponent::simplify(){
