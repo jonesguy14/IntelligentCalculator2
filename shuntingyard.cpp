@@ -367,7 +367,7 @@ void ShuntingYard::postFix(){
 				this->result_stack.pop();
 				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				this->result_stack.push(temp_vector[0]->add(temp_vector[1]));
+				this->result_stack.push(temp_vector[0]->add(temp_vector[1])->simplify());
 				break;
 			}
 			case '-':{
@@ -376,7 +376,7 @@ void ShuntingYard::postFix(){
 				this->result_stack.pop();
 				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				this->result_stack.push(temp_vector[1]->subtract(temp_vector[0]));
+				this->result_stack.push(temp_vector[1]->subtract(temp_vector[0])->simplify());
 				break;
 			}
 			case '*':{
@@ -385,7 +385,7 @@ void ShuntingYard::postFix(){
 				this->result_stack.pop();
 				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				this->result_stack.push(temp_vector[0]->multiply(temp_vector[1]));
+				this->result_stack.push(temp_vector[0]->multiply(temp_vector[1])->simplify());
 				break;
 			}
 			case '/':{
@@ -394,7 +394,7 @@ void ShuntingYard::postFix(){
 				this->result_stack.pop();
 				temp_vector.push_back(this->result_stack.getTop());
 				this->result_stack.pop();
-				this->result_stack.push(temp_vector[1]->divide(temp_vector[0]));
+				this->result_stack.push(temp_vector[1]->divide(temp_vector[0])->simplify());
 				break;
 			}
 			case '^':{
@@ -417,6 +417,14 @@ void ShuntingYard::postFix(){
 					ShuntingYard* power	=	new ShuntingYard(this->ordered_shunting_yard_stack.getTop().getBinaryRight());
 					ShuntingYard* base	=	new ShuntingYard(this->ordered_shunting_yard_stack.getTop().getBinaryLeft());
 					Exponent* temp		=	new Exponent(base->getResult(), power->getResult());
+					this->result_stack.push(temp->simplify());
+				}
+				if(operationtype == "Square root"){
+					Number* one					=	new Number(1);
+					Number* two					=	new Number(2);
+					MultiplicationVector* power	=	new MultiplicationVector(one, two);
+					ShuntingYard* base			=	new ShuntingYard(this->ordered_shunting_yard_stack.getTop().getBinaryLeft());
+					Exponent* temp				=	new Exponent(base->getResult(), power);
 					this->result_stack.push(temp->simplify());
 				}
 				break;
