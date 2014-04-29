@@ -151,6 +151,11 @@ Expression* Logarithm::simplify(){
 	if(getArgument()->getName() == "Exponent"){
 		vector<Expression*> simpLogVec;
 		Exponent* arg = static_cast<Exponent*>(getArgument());
+
+		if(getBase() == arg->getBase()){
+			return arg->getPower();
+		}
+
 		simpLogVec.push_back(arg->getPower());
 
 		Logarithm* newLog = new Logarithm(getBase(),arg->getBase());
