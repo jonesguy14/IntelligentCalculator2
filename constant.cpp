@@ -6,51 +6,65 @@ Constant::Constant(std::string value){
 	this->coefficient.push_back(one);
 }
 
+Constant::Constant(std::string value, Expression* coeff) {
+    this->value = value;
+    this->coefficient.push_back(coeff);
+}
+
 Expression* Constant::add(Expression* value){
 	if(value->getName() == "Constant"){
         Constant* valc = static_cast<Constant*>(value);
-        Expression* temp	=	valc->getValue1();
+        Expression* temp	=	valc->getCoeff();
 		this->coefficient.push_back(this->coefficient.back()->add(temp));
 		return this;
 	}else{
-		SumVecEx* sum = new SumVecEx(this, value);
+		SummationVector* sum = new SummationVector(this, value);
 		return sum;
 	}
 }
 
-Expression* Constant::subtract(Expression* value){
-	if(value->getName() == "Constant"){
-        Constant* valc = static_cast<Constant*>(value);
-		Expression* temp	=	valc->getValue1();
+Expression* Constant::subtract(Expression* ex){
+	if(ex->getName() == "Constant"){
+        Constant* valc = static_cast<Constant*>(ex);
+		Expression* temp	=	valc->getCoeff();
 		this->coefficient.push_back(this->coefficient.back()->subtract(temp));
 		return this;
 	}else{
-	    value->negative();
-		SumVecEx* sum = new SumVecEx(this, value);
+		SummationVector* sum = new SummationVector(this, ex->negative());
 		return sum;
 	}
 }
 
 Expression* Constant::multiply(Expression* value){
     Number* one = new Number(1);
-	MultVecEx* multy = new MultVecEx(this, one);
+	MultiplicationVector* multy = new MultiplicationVector(this, one);
 	Expression* ex = multy->multiply(value);
 	return ex;
 }
 
 Expression* Constant::divide(Expression* value){
 	Number* one = new Number(1);
-	MultVecEx* multy = new MultVecEx(this, one);
+	MultiplicationVector* multy = new MultiplicationVector(this, one);
 	Expression* ex = multy->divide(value);
 	return ex;
 }
 
-bool Constant::canAdd(Expression* value){
-	return (value->getName() == "Constant");
+bool Constant::canAdd(Expression* ex){
+    if (ex->getName() == "Constant") {
+        Constant* exc = static_cast<Constant*>(ex);
+        if (exc->getType()==this->value) {return true;}
+        else {return false;}
+    }
+	else {return false;}
 }
 
-bool Constant::canSubtract(Expression* value){
-	return (value->getName() == "Constant");
+bool Constant::canSubtract(Expression* ex){
+	if (ex->getName() == "Constant") {
+        Constant* exc = static_cast<Constant*>(ex);
+        if (exc->getType()==this->value) {return true;}
+        else {return false;}
+    }
+	else {return false;}
 }
 
 bool Constant::canMultiply(Expression* value){
@@ -65,8 +79,10 @@ bool Constant::canExponentiate(Expression* value){
 	return false;
 }
 
-void Constant::negative(){
-	this->coefficient.back()->negative();
+Expression* Constant::negative(){
+    Expression* newco = getCoeff()->negative();
+    Constant* negation = new Constant(value, newco);
+    return negation;
 }
 
 Expression* Constant::simplify(){
@@ -80,13 +96,13 @@ bool Constant::empty(){
 }
 
 std::string Constant::toString(){
-	if(this->getValue1()->toDecimal() == 0){
+	if(this->getCoeff()->toDecimal() == 0){
 		return "0";
 	}
-	if(this->getValue1()->toDecimal() == 1){
+	if(this->getCoeff()->toDecimal() == 1){
 		return this->value;
 	}
-	return this->getValue1()->toString() + this->value;
+	return this->getCoeff()->toString() + this->value;
 }
 double Constant::toDecimal(){
 	double dec	=	0;
@@ -95,12 +111,16 @@ double Constant::toDecimal(){
 	}else{
 		dec	=	2.7182818284;
 	}
-	return this->getValue1()->toDecimal() * dec;
+	return this->getCoeff()->toDecimal() * dec;
 }
 std::string Constant::getName(){
 	return "Constant";
 }
 
-Expression* Constant::getValue1(){
+Expression* Constant::getCoeff(){
 	return this->coefficient.back();
+}
+
+std::string Constant::getType() {
+    return this->value;
 }
