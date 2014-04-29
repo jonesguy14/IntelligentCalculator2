@@ -25,19 +25,19 @@ Expression* Logarithm::add(Expression* addend){
 			vector<Expression*> exVec;
 			exVec.push_back(two);
 			exVec.push_back(addend);
-			MultVecEx* retEx = new MultVecEx(exVec);
+			MultiplicationVector* retEx = new MultiplicationVector(exVec);
 			return retEx;
 		}
 		else if(sameBase && !sameArg){
 			vector<Expression*> exVec;
 			exVec.push_back(getArgument());
 			exVec.push_back(exLog->getArgument());
-			MultVecEx* newArg = new MultVecEx(exVec);
+			MultiplicationVector* newArg = new MultiplicationVector(exVec);
 			Logarithm* retLog = new Logarithm(getBase(),newArg);
 			return retLog;
 		}
 	}
-	SumVecEx* retEx = new SumVecEx(this, addend);
+	SummationVector* retEx = new SummationVector(this, addend);
 	return retEx;
 }
 
@@ -59,7 +59,7 @@ Expression* Logarithm::subtract(Expression* subtrahend){
 		return zero;
 	}
 	if(canSubtract(subtrahend)){
-		Logarithm* exLog = static_cast<Logarithm*>(addend);
+		Logarithm* exLog = static_cast<Logarithm*>(subtrahend);
 		bool sameBase = exLog->getBase()->toDecimal() == this->getBase()->toDecimal();
 		bool sameArg = exLog->getArgument()->toDecimal() == this->getArgument()->toDecimal();
 		if(sameBase && sameArg){
@@ -67,13 +67,13 @@ Expression* Logarithm::subtract(Expression* subtrahend){
 			return zero;
 		}
 		else if(sameBase && !sameArg){
-			MultVecEx* newArg = new MultVecEx(getArgument(),exLog->getArgument());
+			MultiplicationVector* newArg = new MultiplicationVector(getArgument(),exLog->getArgument());
 			Logarithm* retLog = new Logarithm(getBase(),newArg);
 			return retLog;
 		}
 	}
 	subtrahend->negative();
-	SumVecEx* retEx = new SumVecEx(this, subtrahend);
+	SummationVector* retEx = new SummationVector(this, subtrahend);
 	return retEx;
 }
 
@@ -93,7 +93,7 @@ Expression* Logarithm::multiply(Expression* multiplicand){
 	std::vector<Expression*> exVec;
 	exVec.push_back(this);
 	exVec.push_back(multiplicand);
-	MultVecEx* retEx = new MultVecEx(exVec);
+	MultiplicationVector* retEx = new MultiplicationVector(exVec);
 	return retEx;
 }
 
@@ -109,35 +109,36 @@ Expression* Logarithm::divide(Expression* dividend){
 			Number* one = new Number(1);
 			return one;
 		}
-	MultVecEx* retEx = new MultVecEx(this, dividend);
+	MultiplicationVector* retEx = new MultiplicationVector(this, dividend);
 	return retEx;
 }
 
 bool Logarithm::canDivide(Expression* ex){
 	if(ex->getName() == "Logarithm"){
 		if((this->toDecimal()/ex->toDecimal()) == floor(this->toDecimal()/ex->toDecimal())){
-		return true;
+			return true;
+		}
+		return false;
 	}
-	return false;
 }
 
-void Logarithm::negative(){
+Expression* Logarithm::negative(){
 	Number* neg1 = new Number(-1);
 	vector<Expression*> negVec;
 	negVec.push_back(neg1);
 	negVec.push_back(this);
-	MultVecEx* negEx = new MultVecEx(negVec);
+	MultiplicationVector* negEx = new MultiplicationVector(negVec);
 	return negEx;
 }
 Expression* Logarithm::simplify(){
 	if(getArgument()->toDecimal() == 0){
-		throw Exceptions("Logarithm: log(0); undefined");
+		throw "Logarithm: log(0); undefined";
 	}
 	if(getBase()->toDecimal() == 1){
-		throw Exceptions("Logarithm: log_1:x; undefined");
+		throw "Logarithm: log_1:x; undefined";
 	}
 	if((getBase()->toDecimal() <= 0) || (getArgument()->toDecimal() <= 0)){
-		throw Exceptions("Logarithm: negative base and/or argument; non-real result");
+		throw "Logarithm: negative base and/or argument; non-real result";
 	}
 	if(getArgument()->toDecimal() == 1){
 		Number* zero = new Number(0);
@@ -149,27 +150,20 @@ Expression* Logarithm::simplify(){
 	}
 	if(getArgument()->getName() == "Exponent"){
 		vector<Expression*> simpLogVec;
-		simpLogVec.push_back(getArgument()->getPower());
+		Exponent* arg = static_cast<Exponent*>(getArgument());
+		simpLogVec.push_back(arg->getPower());
 
-		Logarithm* newLog = new Logarithm(getBase(),getArgument()->getBase());
+		Logarithm* newLog = new Logarithm(getBase(),arg->getBase());
 		simpLogVec.push_back(newLog);
 
-		MultVecEx* simpLog = new MultVecEx(simpLogVec);
+		MultiplicationVector* simpLog = new MultiplicationVector(simpLogVec);
 		return simpLog;
 	}
-	if(log10(getArgument()->toDecimal())/log10(getBase()->toDecimal()) == floor(log10(getArgument()->toDecimal())/log10(getBase->toDecimal()))){
-		Number* evalLog = new Number(log10(getArgument()->toDecimal())/log10(getBase()->toDecimal());
+	if(log10(getArgument()->toDecimal())/log10(getBase()->toDecimal()) == floor(log10(getArgument()->toDecimal())/log10(getBase()->toDecimal()))){
+		Number* evalLog = new Number(log10(getArgument()->toDecimal())/log10(getBase()->toDecimal()));
 		return evalLog;
 	}
 		return this;
-}
-
-void Logarithm::clear(){
-	this->base.clear();
-	this->argument.clear();
-}
-bool Logarithm::empty(){
-	return (this->base.empty() && this->power.empty());
 }
 
 std::string Logarithm::toString(){
@@ -187,4 +181,3 @@ double Logarithm::toDecimal(){
 std::string Logarithm::getName(){
 	return "Logarithm";
 }
-
