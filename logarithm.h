@@ -6,7 +6,6 @@ class Logarithm;
 class Exponent;
 class Number;
 class Constant;
-class Polynomial;
 
 class Logarithm : public Expression{
 private:
@@ -14,26 +13,25 @@ private:
 	vector<Expression*> base;
 
 public:
-	Logarithm(Expression, Expression);
-	Expression* add(Expression* ex);
-	Expression* subtract(Expression* ex);
+	Logarithm(Expression*, Expression*);
 
-	Expression* multiply(Expression* ex);
-	Expression* divide(Expression* ex);
+	Expression* getBase();
+	Expression* getArgument();
 
-	Expression* exponentiate(Expression* ex);
+	Expression* add(Expression*);
+	Expression* subtract(Expression*);
+	Expression* multiply(Expression*);
+	Expression* divide(Expression*);
 
-	bool canAdd(Expression* ex);
-	bool canSubtract(Expression* ex);
+	Expression* exponentiate(Expression*);
 
-	bool canMultiply(Expression* ex);
-	bool canDivide(Expression* ex);
-
-	bool canExponentiate(Expression* ex);
+	bool canAdd(Expression*);
+	bool canSubtract(Expression*);
+	bool canDivide(Expression*);
 
 	void negative();
 
-	void simplify();
+	Expression* simplify();
 	void clear();
 	bool empty();
 
