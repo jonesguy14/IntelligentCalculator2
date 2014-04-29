@@ -40,7 +40,7 @@ Expression* SummationVector::add(Expression* ex) {
         }
     }
     expression = summer;
-    return this;
+    return this->simplify();
 }
 
 Expression* SummationVector::subtract(Expression* ex) {
@@ -69,7 +69,7 @@ Expression* SummationVector::subtract(Expression* ex) {
         }
     }
     expression = summer;
-    return this;
+    return this->simplify();
 }
 
 Expression* SummationVector::multiply(Expression* ex) {
@@ -96,7 +96,7 @@ Expression* SummationVector::multiply(Expression* ex) {
         res_sum[i] = res_sum[i]->multiply(ex);
     }
     SummationVector* result = new SummationVector(res_sum);
-    return result;
+    return result->simplify();
 }
 
 Expression* SummationVector::divide(Expression* ex) {
@@ -105,7 +105,7 @@ Expression* SummationVector::divide(Expression* ex) {
         res_sum[i] = res_sum[i]->divide(ex);
     }
     SummationVector* result = new SummationVector(res_sum);
-    return result;
+    return result->simplify();
 }
 
 Expression* SummationVector::simplify() {
@@ -148,7 +148,7 @@ string SummationVector::toString() {
     for (int i = 0; i < expression.size(); i++) {
         if (expression[i]->toDecimal() != 0) {
             if (expression[i]->toDecimal()>=0) {
-                result+="+";
+                if (i!=0) {result+="+";}
                 result+=expression[i]->toString();
             } else {
                 result+=expression[i]->toString();
