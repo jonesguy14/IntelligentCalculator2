@@ -12,7 +12,6 @@ class Logarithm;
 class Exponent;
 class Number;
 class Constant;
-class Polynomial;
 
 class Exponent : public Expression{
 private:
@@ -43,9 +42,9 @@ public:
 	void clear();
 	bool empty();
 
-	string toString();
+	std::string toString();
 	double toDecimal();
-	string getName();
+	std::string getName();
 };
 
 #endif
